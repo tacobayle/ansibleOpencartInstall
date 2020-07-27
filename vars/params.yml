@@ -1,0 +1,18 @@
+---
+mysql_root_password: "mysql_root_password"
+app_user: "nic"
+http_host: "opencart.avidemo.fr"
+http_conf: "opencart.avidemo.fr.conf"
+http_port: "80"
+disable_default: true
+mysql_db: "opencart"
+mysql_db_user: "opencart"
+mysql_db_password: "opencart"
+mysql_db_port: "3306"
+#new variable
+mysql_db_hostname: "192.168.142.134"
+#
+opencart_user: "admin"
+opencart_password: "opencart"
+opencart_email: "nicolas.bayle.it@gmail.com"
+opencart_http_server: "http://192.168.142.132/"

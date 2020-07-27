@@ -1,0 +1,64 @@
+---
+- hosts: backend
+  become: true
+  vars_files:
+    - vars/params.yml
+
+  tasks:
+
+    - name: Set up Apache virtualhost
+      template:
+        src: "files/apache.conf.j2"
+        dest: "/etc/apache2/sites-available/{{ http_conf }}"
+      notify: Reload Apache
+
+    - name: Enable new site
+      shell: /usr/sbin/a2ensite {{ http_conf }}
+      notify: Reload Apache
+
+    - name: Disable default Apache site
+      shell: /usr/sbin/a2dissite 000-default.conf
+      when: disable_default
+      notify: Reload Apache
+
+  # UFW Configuration
+    - name: "UFW - Allow HTTP on port {{ http_port }}"
+      ufw:
+        rule: allow
+        port: "{{ http_port }}"
+        proto: tcp
+
+    - name: Install Opencart app
+      become: true
+      shell: |
+        php /var/www/opencart.avidemo.fr/install/cli_install.php install --db_hostname "{{ mysql_db_hostname }}" --db_username "{{ mysql_db_user }}" \
+        --db_password "{{ mysql_db_password }}" --db_database "{{ mysql_db }}" --db_driver mysqli --dbport "{{ mysql_db_port }}" \
+        --username "{{ opencart_user }}" --password "{{ opencart_password }}" --email "{{ opencart_email }}" --http_server http://test.avidemo.fr/
+      retries: 3
+      delay: 3
+      register: result
+      until: result.rc == 0
+      tags:
+        - test2
+
+
+    #     sudo php /var/www/opencart.avidemo.fr/install/cli_install.php install --db_hostname 192.168.142.134 --db_username opencart --db_password opencart --db_database opencart --db_driver mysqli --dbport 3306 --username admin --password opencart --email nicolas.bayle.it@gmail.com --http_server http://192.168.142.132/
+    #     sudo php /var/www/opencart.avidemo.fr/install/cli_install.php install --db_hostname 192.168.142.134 --db_username opencart --db_password opencart --db_database opencart --db_driver mysqli --dbport 3306 --username admin --password opencart --email nicolas.bayle.it@gmail.com --http_server http://192.168.142.133/
+
+
+    - name: "UFW - Allow HTTP on port {{ mysql_db_port }}"
+      debug:
+        msg: '{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}'
+      tags:
+        - test1
+
+  handlers:
+    - name: Reload Apache
+      service:
+        name: apache2
+        state: reloaded
+
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted

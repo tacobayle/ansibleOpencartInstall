@@ -1,0 +1,72 @@
+---
+- hosts: mysql
+  become: true
+  vars_files:
+    - vars/params.yml
+
+  tasks:
+
+    - name: Sets the root password
+      mysql_user:
+        name: root
+        password: "{{ mysql_root_password }}"
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
+    - name: Removes all anonymous user accounts
+      mysql_user:
+        name: ''
+        host_all: yes
+        state: absent
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+
+    - name: Removes the MySQL test database
+      mysql_db:
+        name: test
+        state: absent
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+
+    - name: Create the MySQL database
+      mysql_db:
+        name: "{{ mysql_db }}"
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+      tags:
+        - mysql
+
+    - name: Create database user
+      mysql_user:
+        name: "{{ mysql_db_user }}"
+        password: "{{ mysql_db_password }}"
+        priv: '{{ mysql_db }}.*:ALL'
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        state: present
+        host: '%'
+      tags:
+        - mysql2
+
+    - name: "UFW - Allow HTTP on port {{ mysql_db_port }}"
+      ufw:
+        rule: allow
+        port: "{{ mysql_db_port }}"
+        proto: tcp
+      tags:
+        - mysql
+
+    - name: Ensure SELinux is set to enforcing mode
+      lineinfile:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        regexp: '^bind-address'
+        line: bind-address            = 0.0.0.0
+      tags:
+        - mysql2
+      notify: restart mysql
+
+
+  handlers:
+    - name: restart mysql
+      service: name=mysql
+               enabled=yes
+               state=restarted
