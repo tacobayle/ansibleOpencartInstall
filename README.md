@@ -1,4 +1,4 @@
-# aviAws
+# ansible Opencart Install
 
 ## Goals
 Spin up the OpenCart application in a distributed fashion (2 web frontends, 1 mysql backend)
