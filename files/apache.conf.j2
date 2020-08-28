@@ -1,12 +1,12 @@
 <VirtualHost *:{{ http_port }}>
     ServerAdmin webmaster@localhost
-    ServerName {{ http_host }}
-    ServerAlias www.{{ http_host }}
-    DocumentRoot /var/www/{{ http_host }}
+    ServerName {{ aviVsOpencart }}.{{ dns.domain.name }}
+    ServerAlias www.{{ aviVsOpencart }}.{{ dns.domain.name }}
+    DocumentRoot /var/www/{{ aviVsOpencart }}.{{ dns.domain.name }}
     ErrorLog ${APACHE_LOG_DIR}/error.log
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 
-    <Directory /var/www/{{ http_host }}>
+    <Directory /var/www/{{ aviVsOpencart }}.{{ dns.domain.name }}>
           Options -Indexes
     </Directory>
 
