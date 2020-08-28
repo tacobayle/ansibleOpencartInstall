@@ -57,8 +57,6 @@ nic@bionic3:~$
 
 ## Input/Parameters:
 
-1. All the paramaters/variables are stored in vars/params.yml
-
 ## Use the the playbook to:
 1. Configure mysql
 2. Configure Opencart/Apache

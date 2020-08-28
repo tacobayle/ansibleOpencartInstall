@@ -1,10 +1,24 @@
 ---
 - hosts: mysql
   become: true
-  vars_files:
-    - vars/params.yml
+  # vars_files:
+  #   - vars/params.yml
 
   tasks:
+
+    - name: Wait 300 seconds for port 22 to become open and contain "OpenSSH"
+      wait_for:
+        port: 22
+        host: '{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}'
+        #search_regex: OpenSSH
+        delay: 10
+      vars:
+        ansible_connection: local
+
+    - name: Wait until Cloud init is done
+      wait_for:
+        path: /tmp/cloudInitDone.log
+
 
     - name: Sets the root password
       mysql_user:
@@ -61,9 +75,8 @@
         regexp: '^bind-address'
         line: bind-address            = 0.0.0.0
       tags:
-        - mysql2
+        - mysql
       notify: restart mysql
-
 
   handlers:
     - name: restart mysql
