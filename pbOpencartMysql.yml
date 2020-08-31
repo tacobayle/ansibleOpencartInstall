@@ -23,7 +23,7 @@
     - name: Sets the root password
       mysql_user:
         name: root
-        password: "{{ mysql_root_password }}"
+        password: "{{ mysql_root_password | default('mysql_root_password') }}"
         login_unix_socket: /var/run/mysqld/mysqld.sock
 
     - name: Removes all anonymous user accounts
@@ -32,39 +32,39 @@
         host_all: yes
         state: absent
         login_user: root
-        login_password: "{{ mysql_root_password }}"
+        login_password: "{{ mysql_root_password | default('mysql_root_password') }}"
 
     - name: Removes the MySQL test database
       mysql_db:
         name: test
         state: absent
         login_user: root
-        login_password: "{{ mysql_root_password }}"
+        login_password: "{{ mysql_root_password | default('mysql_root_password') }}"
 
     - name: Create the MySQL database
       mysql_db:
-        name: "{{ mysql_db }}"
+        name: "{{ mysql_db | default('opencart') }}"
         login_user: root
-        login_password: "{{ mysql_root_password }}"
+        login_password: "{{ mysql_root_password | default('mysql_root_password') }}"
       tags:
         - mysql
 
     - name: Create database user
       mysql_user:
-        name: "{{ mysql_db_user }}"
-        password: "{{ mysql_db_password }}"
-        priv: '{{ mysql_db }}.*:ALL'
+        name: "{{ mysql_db_user | default('opencart') }}"
+        password: "{{ mysql_db_password | default('opencart') }}"
+        priv: '{{ mysql_db | default('opencart') }}.*:ALL'
         login_user: root
-        login_password: "{{ mysql_root_password }}"
+        login_password: "{{ mysql_root_password | default('mysql_root_password') }}"
         state: present
         host: '%'
       tags:
-        - mysql2
+        - mysql
 
-    - name: "UFW - Allow HTTP on port {{ mysql_db_port }}"
+    - name: "UFW - Allow HTTP on port {{ mysql_db_port | default('80') }}"
       ufw:
         rule: allow
-        port: "{{ mysql_db_port }}"
+        port: "{{ mysql_db_port | default('80') }}"
         proto: tcp
       tags:
         - mysql

@@ -12,7 +12,7 @@ Spin up the OpenCart application in a distributed fashion (2 web frontends, 1 my
 ---
 all:
   children:
-    backend:
+    opencart:
       hosts:
         192.168.142.132:
         192.168.142.133:

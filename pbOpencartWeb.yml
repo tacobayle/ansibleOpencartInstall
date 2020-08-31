@@ -1,5 +1,5 @@
 ---
-- hosts: backend
+- hosts: opencart
   become: true
   # vars_files:
   #   - vars/params.yml
@@ -22,11 +22,11 @@
     - name: Set up Apache virtualhost
       template:
         src: "files/apache.conf.j2"
-        dest: "/etc/apache2/sites-available/{{ aviVsOpencart }}.{{ dns.domain.name }}.conf"
+        dest: "/etc/apache2/sites-available/opencart.{{ domain.name }}.conf"
       notify: Reload Apache
 
     - name: Enable new site
-      shell: "/usr/sbin/a2ensite {{ aviVsOpencart }}.{{ dns.domain.name }}.conf"
+      shell: "/usr/sbin/a2ensite opencart.{{ domain.name }}.conf"
       notify: Reload Apache
 
     - name: Disable default Apache site
@@ -34,22 +34,22 @@
       notify: Reload Apache
 
   # UFW Configuration
-    - name: "UFW - Allow HTTP on port {{ http_port }}"
+    - name: "UFW - Allow HTTP on port {{ http_port | default ('80') }}"
       ufw:
         rule: allow
-        port: "{{ http_port }}"
+        port: "{{ http_port | default ('80') }}"
         proto: tcp
 
 
     - name: Install Opencart app
       become: true
       shell: |
-        php /var/www/"{{ aviVsOpencart }}.{{ dns.domain.name }}"/install/cli_install.php install \
-        --db_hostname "{{ mysql_db_hostname }}" --db_username "{{ mysql_db_user }}" \
-        --db_password "{{ mysql_db_password }}" --db_database "{{ mysql_db }}" \
-        --db_driver mysqli --dbport "{{ mysql_db_port }}" --username "{{ opencart_user }}" \
-        --password "{{ opencart_password }}" --email "{{ opencart_email }}" \
-        --http_server https://"{{ aviVsOpencart }}.{{ dns.domain.name }}"/
+        php /var/www/"opencart.{{ domain.name }}"/install/cli_install.php install \
+        --db_hostname "{{ mysql_db_hostname.0 }}" --db_username "{{ mysql_db_user | default('opencart') }}" \
+        --db_password "{{ mysql_db_password | default('opencart') }}" --db_database "{{ mysql_db | default('opencart') }}" \
+        --db_driver mysqli --dbport "{{ mysql_db_port | default('3306') }}" --username "{{ opencart_user | default('admin') }}" \
+        --password "{{ opencart_password | default('opencart') }}" --email "{{ opencart_email | default('opencart@avidemo.fr') }}" \
+        --http_server https://"opencart.{{ domain.name }}"/
       retries: 3
       delay: 3
       register: result
