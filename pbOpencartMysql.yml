@@ -53,7 +53,7 @@
       mysql_user:
         name: "{{ mysql_db_user | default('opencart') }}"
         password: "{{ mysql_db_password | default('opencart') }}"
-        priv: '{{ mysql_db | default('opencart') }}.*:ALL'
+        priv: "{{ mysql_db | default('opencart') }}.*:ALL"
         login_user: root
         login_password: "{{ mysql_root_password | default('mysql_root_password') }}"
         state: present
