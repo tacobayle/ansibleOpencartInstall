@@ -45,7 +45,7 @@
       become: true
       shell: |
         php /var/www/"opencart.{{ domain.name }}"/install/cli_install.php install \
-        --db_hostname "{{ mysql_db_hostname.0 }}" --db_username "{{ mysql_db_user | default('opencart') }}" \
+        --db_hostname "{{ mysql_db_hostname }}" --db_username "{{ mysql_db_user | default('opencart') }}" \
         --db_password "{{ mysql_db_password | default('opencart') }}" --db_database "{{ mysql_db | default('opencart') }}" \
         --db_driver mysqli --dbport "{{ mysql_db_port | default('3306') }}" --username "{{ opencart_user | default('admin') }}" \
         --password "{{ opencart_password | default('opencart') }}" --email "{{ opencart_email | default('opencart@avidemo.fr') }}" \
