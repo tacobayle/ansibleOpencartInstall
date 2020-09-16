@@ -1,12 +1,12 @@
 <VirtualHost *:80>
     ServerAdmin webmaster@localhost
-    ServerName opencart.{{ domain.name }}
-    ServerAlias www.opencart.{{ domain.name }}
-    DocumentRoot /var/www/opencart.{{ domain.name }}
+    ServerName opencart.{{ avi_gslb.dns_configs.0.domain_name }}
+    ServerAlias www.opencart.{{ avi_gslb.dns_configs.0.domain_name }}
+    DocumentRoot /var/www/opencart.{{ avi_gslb.dns_configs.0.domain_name }}
     ErrorLog ${APACHE_LOG_DIR}/error.log
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 
-    <Directory /var/www/opencart.{{ domain.name }}>
+    <Directory /var/www/opencart.{{ avi_gslb.dns_configs.0.domain_name }}>
           Options -Indexes
     </Directory>
 
