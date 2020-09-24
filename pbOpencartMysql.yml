@@ -1,5 +1,5 @@
 ---
-- hosts: mysql, aws_mysql
+- hosts: mysql, aws_group_mysql
   become: true
   # vars_files:
   #   - vars/params.yml

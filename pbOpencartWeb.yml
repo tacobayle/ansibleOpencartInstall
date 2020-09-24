@@ -1,5 +1,5 @@
 ---
-- hosts: opencart, aws_opencart
+- hosts: opencart, aws_group_opencart
   become: true
   # vars_files:
   #   - vars/params.yml
