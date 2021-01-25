@@ -8,10 +8,8 @@ Spin up the OpenCart application in a distributed fashion (2 web frontends, 1 my
 - Make sure Ansible is installed in the orchestrator VM
 - Make sure you have the following variable defined:
 ```
-mysql_db_hostname: ip_of_mysql
-avi_gslb:
-  dns_configs:
-    - domain_name: my_domain_name
+mysql_db_hostname: ip_of_mysql_server
+domainName: my_domain_name
 ```
 
 ## Environment:
