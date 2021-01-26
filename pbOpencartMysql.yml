@@ -19,6 +19,25 @@
       wait_for:
         path: /tmp/cloudInitDone.log
 
+    - name: Update repositories cache and install a list of package
+      become: true
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+      ignore_errors: no
+      loop:
+        - open-vm-tools
+        - mysql-server
+        - python-pip
+        - python3-pip
+      tags:
+        - apt
+
+    - name: Install pip packages
+      pip:
+        name: "{{ item }}"
+      loop:
+        - PyMySQL
 
     - name: Sets the root password
       mysql_user:
