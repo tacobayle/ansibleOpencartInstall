@@ -1,5 +1,5 @@
 ---
-- hosts: opencart, aws_group_opencart, gcp_group_opencart, azure_group_opencart
+- hosts: opencart, aws_group_opencart, gcp_group_opencart, azure_group_opencart, opencart_tmp
   become: true
   # vars_files:
   #   - vars/params.yml
