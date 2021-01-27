@@ -2,11 +2,11 @@
     ServerAdmin webmaster@localhost
     ServerName opencart.{{ domainName }}
     ServerAlias www.opencart.{{ domainName }}
-    DocumentRoot /var/www/opencart.{{ domainName }}
+    DocumentRoot /var/www/opencart
     ErrorLog ${APACHE_LOG_DIR}/error.log
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 
-    <Directory /var/www/opencart.{{ domainName }}>
+    <Directory /var/www/opencart>
           Options -Indexes
     </Directory>
 

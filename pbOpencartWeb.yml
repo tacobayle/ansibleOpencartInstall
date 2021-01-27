@@ -22,11 +22,11 @@
     - name: Set up Apache virtualhost
       template:
         src: "files/apache.conf.j2"
-        dest: "/etc/apache2/sites-available/opencart.{{ domainName }}.conf"
+        dest: "/etc/apache2/sites-available/opencart.conf"
       notify: Reload Apache
 
     - name: Enable new site
-      shell: "/usr/sbin/a2ensite opencart.{{ domainName }}.conf"
+      shell: "/usr/sbin/a2ensite opencart.conf"
       notify: Reload Apache
 
     - name: Disable default Apache site
@@ -44,7 +44,7 @@
     - name: Install Opencart app
       become: true
       shell: |
-        php /var/www/"opencart.{{ domainName }}"/install/cli_install.php install \
+        php /var/www/opencart/install/cli_install.php install \
         --db_hostname "{{ mysql_db_hostname }}" --db_username "{{ mysql_db_user | default('opencart') }}" \
         --db_password "{{ mysql_db_password | default('opencart') }}" --db_database "{{ mysql_db | default('opencart') }}" \
         --db_driver mysqli --dbport "{{ mysql_db_port | default('3306') }}" --username "{{ opencart_user | default('admin') }}" \
